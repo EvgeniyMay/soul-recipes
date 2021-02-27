@@ -25,4 +25,9 @@ public class Recipe {
             inverseJoinColumns = { @JoinColumn(name = "ingredient_capacity_id")})
     private List<IngredientCapacity> ingredientCapacities;
 
+
+    @OneToOne(mappedBy = "recipe", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private Instruction instruction;
+
 }
