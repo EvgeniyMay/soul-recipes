@@ -30,4 +30,6 @@ public class Recipe {
     @PrimaryKeyJoinColumn
     private Instruction instruction;
 
+    private String description;
+
 }
