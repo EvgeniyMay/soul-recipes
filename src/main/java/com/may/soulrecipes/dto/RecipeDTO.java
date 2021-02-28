@@ -16,9 +16,9 @@ public class RecipeDTO {
 
     private List<IngredientDTO> ingredients = new ArrayList<>();
 
-    private InstructionDTO instruction;
+    private String instruction;
 
     private String description;
 
-    private Recipe parent;
+    private Long parentId;
 }
