@@ -1,11 +1,10 @@
 package com.may.soulrecipes.dto;
 
-import com.may.soulrecipes.entity.IngredientCapacity;
-import com.may.soulrecipes.entity.Instruction;
 import com.may.soulrecipes.entity.Recipe;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -15,9 +14,9 @@ public class RecipeDTO {
 
     private String title;
 
-    private List<IngredientCapacity> ingredientCapacities;
+    private List<IngredientDTO> ingredients = new ArrayList<>();
 
-    private Instruction instruction;
+    private InstructionDTO instruction;
 
     private String description;
 

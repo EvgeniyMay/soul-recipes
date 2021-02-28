@@ -8,4 +8,8 @@ import lombok.Setter;
 public class IngredientDTO {
 
     private String name;
+
+    private String measure;
+
+    private Integer capacity;
 }
