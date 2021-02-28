@@ -15,7 +15,7 @@ public class Recipe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String title;
 
     @ManyToMany(cascade = { CascadeType.ALL })
@@ -31,5 +31,13 @@ public class Recipe {
     private Instruction instruction;
 
     private String description;
+
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id", nullable = false)
+    private Recipe parent;
+
+    @OneToMany(mappedBy = "parent")
+    private List<Recipe> children;
 
 }
