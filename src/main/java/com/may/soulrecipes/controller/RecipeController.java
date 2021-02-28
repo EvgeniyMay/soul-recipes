@@ -4,6 +4,8 @@ import com.may.soulrecipes.dto.IngredientDTO;
 import com.may.soulrecipes.dto.RecipeDTO;
 import com.may.soulrecipes.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +25,10 @@ public class RecipeController {
 
 
     @GetMapping("/all")
-    public String getAllRecipesPage(Model model) {
-        model.addAttribute("recipes", recipeService.getAll());
+    public String getAllRecipesPage(Model model,
+                                    @PageableDefault(sort = {"title"}, size = 10)
+                                    Pageable pageable) {
+        model.addAttribute("recipePage", recipeService.getPageable(pageable));
 
         return "recipe/allRecipes";
     }

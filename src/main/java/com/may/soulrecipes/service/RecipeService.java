@@ -11,6 +11,8 @@ import com.may.soulrecipes.repository.IngredientRepository;
 import com.may.soulrecipes.repository.InstructionRepository;
 import com.may.soulrecipes.repository.RecipeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +42,10 @@ public class RecipeService {
 
     public List<Recipe> getAll() {
         return recipeRepository.findAll();
+    }
+
+    public Page<Recipe> getPageable(Pageable pageable) {
+        return recipeRepository.findAll(pageable);
     }
 
     @Transactional

@@ -1,6 +1,5 @@
 package com.may.soulrecipes.dto;
 
-import com.may.soulrecipes.entity.Recipe;
 import lombok.Getter;
 import lombok.Setter;
 
