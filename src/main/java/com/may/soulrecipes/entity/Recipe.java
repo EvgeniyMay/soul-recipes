@@ -1,13 +1,15 @@
 package com.may.soulrecipes.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Setter
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Recipe {
 
@@ -25,16 +27,15 @@ public class Recipe {
             inverseJoinColumns = { @JoinColumn(name = "ingredient_capacity_id")})
     private List<IngredientCapacity> ingredientCapacities;
 
-
-    @OneToOne(mappedBy = "recipe", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "instruction_id")
     private Instruction instruction;
 
     private String description;
 
-
-    @ManyToOne
-    @JoinColumn(name = "parent_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
     private Recipe parent;
 
     @OneToMany(mappedBy = "parent")

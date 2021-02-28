@@ -1,13 +1,15 @@
 package com.may.soulrecipes.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
-@Setter
 @Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class IngredientCapacity {
 
@@ -23,5 +25,6 @@ public class IngredientCapacity {
     private Ingredient ingredient;
 
     private Integer capacity;
+
     private String measure;
 }

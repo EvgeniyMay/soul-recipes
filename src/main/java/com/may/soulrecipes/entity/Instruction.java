@@ -1,12 +1,14 @@
 package com.may.soulrecipes.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Setter
 @Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Instruction {
 
@@ -14,9 +16,8 @@ public class Instruction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "recipe_id")
+    @OneToOne(mappedBy = "instruction", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     private Recipe recipe;
 
     @Column(columnDefinition = "TEXT")
