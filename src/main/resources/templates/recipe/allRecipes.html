@@ -18,6 +18,15 @@
                     <tr th:each="recipe: ${recipes}">
                         <td th:text="${recipe.title}"></td>
                         <td th:text="${recipe.description}"></td>
+                        <td>
+                           <ul>
+                               <li th:each="ingredientCapacity : ${recipe.ingredientCapacities}">
+                                   <span th:text="${ingredientCapacity.ingredient.name}"></span>
+                                   <span th:text="${ingredientCapacity.capacity}"></span>
+                                   <span th:text="${ingredientCapacity.measure}"></span>
+                               </li>
+                           </ul>
+                        </td>
                     </tr>
                 </tbody>
             </table>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New Recipe</title>
+</head>
+<body>
+    <main>
+        <div>
+            <form th:action="@{/create}" method="GET">
+                <label>
+                    Ingredients number:
+                    <input type="number" name="ingredientSize">
+                </label>
+                <button>Submit</button>
+            </form>
+            <p>After updating all fields fill be cleaned</p>
+
+            <form th:action="@{/create}" th:object="${recipeForm}" method="POST">
+
+                <label for="recipeParent">
+                    Parent
+                </label>
+                    <select th:field="*{parentId}" id="recipeParent">
+                        <option th:text="None"
+                                th:value="null">
+                        </option>
+                        <option th:each="recipe : ${allRecipes}"
+                                th:text="${recipe.title} + ' | ' + ${recipe.description}"
+                                th:value="${recipe.id}">
+                        </option>
+                    </select>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label for="recipeName">Title</label>
+                                <input type="text" th:field="*{title}" id="recipeName">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="recipeDescription">Description</label>
+                                <textarea th:field="*{description}" id="recipeDescription">
+                                    About recipe
+                                </textarea>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Measure</th>
+                            <th>capacity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="ingredient, itemStat : *{ingredients}">
+                            <td>
+                                <input th:field="*{ingredients[__${itemStat.index}__].name}">
+                            </td>
+                            <td>
+                                <input th:field="*{ingredients[__${itemStat.index}__].measure}">
+                            </td>
+                            <td>
+                                <input type="number" th:field="*{ingredients[__${itemStat.index}__].capacity}">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <textarea th:field="*{instruction}">
+                </textarea>
+
+                <button type="submit">
+                    Create
+                </button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>
