@@ -3,6 +3,7 @@ package com.may.soulrecipes.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Setter
@@ -40,5 +41,8 @@ public class Recipe {
 
     @OneToMany(mappedBy = "parent")
     private List<Recipe> children;
+
+    @Column(nullable = false)
+    private LocalDateTime updateDate;
 
 }

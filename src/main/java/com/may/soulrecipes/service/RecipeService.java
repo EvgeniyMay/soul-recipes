@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,6 +57,7 @@ public class RecipeService {
                 .ingredientCapacities(getIngredientCapacities(recipeDTO))
                 .instruction(getInstruction(recipeDTO))
                 .parent(getParent(recipeDTO))
+                .updateDate(LocalDateTime.now())
                 .build();
 
         return recipeRepository.save(recipe);
