@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div class="container" th:fragment="header">
+    <div class="row align-items-center justify-content-between">
+<!--        Logo-->
+        <div class="col-auto">
+            <div class="row align-items-center justify-content-start">
+                <div class="col-auto">
+                    <h1 class="py-3">Soul Recipes</h1>
+                </div>
+            </div>
+        </div>
+<!--        Nav-->
+        <div class="col-auto">
+            <div class="row align-items-center justify-content-end">
+                <div class="col-auto">
+                    <a class="btn" th:href="@{/all}">All recipes</a>
+                    <a class="btn" th:href="@{/create}">Create new</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>
