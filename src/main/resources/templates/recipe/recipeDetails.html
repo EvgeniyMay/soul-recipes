@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${recipe.title}"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"  href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
+          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+</head>
+<body>
+    <header>
+        <div th:replace="~{fragments/header :: header}"></div>
+    </header>
+    <main>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h2 class="my-3" th:text="${recipe.title}"></h2>
+
+                    <h3 class="mt-2">Ingredients</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Capacity</th>
+                                <th>Measure</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="ingredientCapacity : ${recipe.ingredientCapacities}">
+                                <td th:text="${ingredientCapacity.ingredient.name}"></td>
+                                <td th:text="${ingredientCapacity.capacity}"></td>
+                                <td th:text="${ingredientCapacity.measure}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <h3 class="mt-2">Instruction</h3>
+                    <div>
+                        <p th:each="paragraph : ${instruction}" th:text="${paragraph}"></p>
+                    </div>
+<!--                    Parent-->
+                    <div th:if="${recipe.parent != null}">
+                        <p>Parent recipe</p>
+<!--                                ToDo | Add link-->
+                        <a th:href="@{/{id}/details(id=${recipe.parent.id})}" th:text="${recipe.parent.title}"></a>
+                    </div>
+<!--                    Children-->
+                    <div th:if="${!recipe.children.isEmpty()}">
+                        <p>Child recipes</p>
+                        <ul>
+                            <li th:each="childRecipe : ${recipe.children}">
+<!--                                ToDo | Add link-->
+                                <a th:href="@{/{id}/details(id=${childRecipe.id})}" th:text="${childRecipe.title}"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+</body>
+</html>

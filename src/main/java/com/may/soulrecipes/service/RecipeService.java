@@ -49,6 +49,12 @@ public class RecipeService {
         return recipeRepository.findAll(pageable);
     }
 
+    public Recipe getById(Long id) {
+        return recipeRepository.findById(id)
+                //ToDo | Create special exception
+                .orElseThrow(RuntimeException::new);
+    }
+
     @Transactional
     public Recipe create(RecipeDTO recipeDTO) {
         Recipe recipe = Recipe.builder()

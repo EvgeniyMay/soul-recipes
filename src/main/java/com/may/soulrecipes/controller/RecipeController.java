@@ -2,16 +2,18 @@ package com.may.soulrecipes.controller;
 
 import com.may.soulrecipes.dto.IngredientDTO;
 import com.may.soulrecipes.dto.RecipeDTO;
+import com.may.soulrecipes.entity.Recipe;
 import com.may.soulrecipes.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class RecipeController {
@@ -67,5 +69,18 @@ public class RecipeController {
         }
 
         return "redirect:/all";
+    }
+
+    @GetMapping("/{recipeId}/details")
+    public String getRecipeDetailsPage(Model model,
+                                       @PathVariable Long recipeId) {
+        Recipe recipe =  recipeService.getById(recipeId);
+        List<String> instruction = Arrays.asList(recipe.getInstruction()
+                .getText().split(System.lineSeparator()));
+
+        model.addAttribute("recipe", recipe);
+        model.addAttribute("instruction", instruction);
+
+        return "recipe/recipeDetails";
     }
 }
