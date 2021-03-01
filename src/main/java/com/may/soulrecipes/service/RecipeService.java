@@ -56,23 +56,53 @@ public class RecipeService {
     }
 
     @Transactional
+    public Recipe update(RecipeDTO recipeDTO) {
+        Recipe recipe = Recipe.builder()
+                .id(recipeDTO.getId())
+                .title(recipeDTO.getTitle())
+                .description(recipeDTO.getDescription())
+                .ingredientCapacities(getIngredientCapacities(recipeDTO))
+                .parent(getParent(recipeDTO))
+                .updateDate(LocalDateTime.now())
+                .build();
+
+        updateInstruction(recipeDTO);
+
+        return recipeRepository.save(recipe);
+    }
+
+    @Transactional
     public Recipe create(RecipeDTO recipeDTO) {
         Recipe recipe = Recipe.builder()
                 .title(recipeDTO.getTitle())
                 .description(recipeDTO.getDescription())
                 .ingredientCapacities(getIngredientCapacities(recipeDTO))
-                .instruction(getInstruction(recipeDTO))
                 .parent(getParent(recipeDTO))
                 .updateDate(LocalDateTime.now())
                 .build();
 
+        saveInstruction(recipe, recipeDTO);
+
         return recipeRepository.save(recipe);
     }
 
-    private Instruction getInstruction(RecipeDTO recipeDTO) {
-        return instructionRepository.save(Instruction.builder()
-                .text(recipeDTO.getInstruction())
-                .build());
+    private void saveInstruction(Recipe recipe, RecipeDTO recipeDTO) {
+        instructionRepository.save(Instruction.builder()
+            .text(recipeDTO.getInstruction())
+            .recipe(recipe)
+            .build());
+    }
+
+    private void updateInstruction(RecipeDTO recipeDTO) {
+        try {
+            instructionRepository.getById(recipeDTO.getId())
+                    //ToDo | Create special exception
+                    .orElseThrow(RuntimeException::new)
+                    .setText(recipeDTO.getInstruction());
+        } catch (RuntimeException e) {
+            //ToDo
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -105,11 +135,15 @@ public class RecipeService {
                 .measure(ingredientDTO.getMeasure())
                 .build();
 
-        return ingredientCapacityRepository.findByIngredientAndMeasureAndCapacity(
-                ingredientCapacity.getIngredient(),
-                ingredientCapacity.getMeasure(),
-                ingredientCapacity.getCapacity()
-        ).orElse(ingredientCapacityRepository.save(ingredientCapacity));
+        try {
+            return ingredientCapacityRepository.findByIngredientAndMeasureAndCapacity(
+                    ingredientCapacity.getIngredient(),
+                    ingredientCapacity.getMeasure(),
+                    ingredientCapacity.getCapacity())
+                .orElseThrow(RuntimeException::new);
+        } catch (RuntimeException e) {
+            return ingredientCapacityRepository.save(ingredientCapacity);
+        }
     }
 
     /**
@@ -126,6 +160,34 @@ public class RecipeService {
                     .name(name)
                     .build());
         }
+    }
+
+    public RecipeDTO getDtoById(Long recipeId) {
+        //ToDo | Exception
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(RuntimeException::new);
+
+        List<IngredientDTO> ingredientDTOs = recipe.getIngredientCapacities().stream()
+                .map(ingredientCapacity ->
+                        IngredientDTO.builder()
+                                .name(ingredientCapacity.getIngredient().getName())
+                                .capacity(ingredientCapacity.getCapacity())
+                                .measure(ingredientCapacity.getMeasure())
+                                .build())
+                .collect(Collectors.toList());
+
+        RecipeDTO recipeDTO = RecipeDTO.builder()
+                .id(recipe.getId())
+                .title(recipe.getTitle())
+                .description(recipe.getDescription())
+                .instruction(recipe.getInstruction().getText())
+                .ingredients(ingredientDTOs)
+                .build();
+
+        if(recipe.getParent() != null)
+            recipeDTO.setParentId(recipe.getParent().getId());
+
+        return recipeDTO;
     }
 
 }

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title ер>Edit recipe</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"  href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
+          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+</head>
+<body>
+    <header>
+        <div th:replace="~{fragments/header :: header}"></div>
+    </header>
+    <main>
+        <div>
+            <form th:action="@{/edit}" method="GET">
+                <label>
+                    Ingredients number:
+                    <input type="number" name="ingredientSize">
+                </label>
+                <button>Submit</button>
+            </form>
+            <p>After updating all fields fill be cleaned</p>
+
+            <form th:action="@{/edit}" th:object="${recipeForm}" method="POST">
+                <input type="hidden" th:field="*{id}">
+
+                <label for="recipeParent">
+                    Parent
+                </label>
+                <select th:field="*{parentId}" id="recipeParent">
+                    <option th:text="None"
+                            th:value="null">
+                    </option>
+                    <option th:each="recipe : ${allRecipes}"
+                            th:text="${recipe.title} + ' | ' + ${recipe.description}"
+                            th:value="${recipe.id}">
+                    </option>
+                </select>
+                <table>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <label for="recipeName">Title</label>
+                            <input type="text" th:field="*{title}" id="recipeName">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="recipeDescription">Description</label>
+                            <textarea th:field="*{description}" id="recipeDescription">
+                                    About recipe
+                            </textarea>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Measure</th>
+                        <th>capacity</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="ingredient, itemStat : *{ingredients}">
+                        <td>
+                            <input th:field="*{ingredients[__${itemStat.index}__].name}">
+                        </td>
+                        <td>
+                            <input th:field="*{ingredients[__${itemStat.index}__].measure}">
+                        </td>
+                        <td>
+                            <input type="number" th:field="*{ingredients[__${itemStat.index}__].capacity}">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <textarea th:field="*{instruction}">
+                </textarea>
+
+                <button type="submit">
+                    Update
+                </button>
+            </form>
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+</body>
+</html>

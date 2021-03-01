@@ -17,6 +17,8 @@
                 <div class="col">
                     <h2 class="my-3" th:text="${recipe.title}"></h2>
 
+                    <a class="btn" th:href="@{/{id}/edit(id=${recipe.id})}">Edit</a>
+
                     <h3 class="mt-2">Ingredients</h3>
                     <table>
                         <thead>
@@ -34,7 +36,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    
+
                     <h3 class="mt-2">Instruction</h3>
                     <div>
                         <p th:each="paragraph : ${instruction}" th:text="${paragraph}"></p>
