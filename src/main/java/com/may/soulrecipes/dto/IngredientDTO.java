@@ -1,10 +1,12 @@
 package com.may.soulrecipes.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
 @Setter
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class IngredientDTO {
 
     private String name;
