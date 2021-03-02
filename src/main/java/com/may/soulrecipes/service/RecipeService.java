@@ -6,6 +6,7 @@ import com.may.soulrecipes.entity.Ingredient;
 import com.may.soulrecipes.entity.IngredientCapacity;
 import com.may.soulrecipes.entity.Instruction;
 import com.may.soulrecipes.entity.Recipe;
+import com.may.soulrecipes.exception.*;
 import com.may.soulrecipes.repository.IngredientCapacityRepository;
 import com.may.soulrecipes.repository.IngredientRepository;
 import com.may.soulrecipes.repository.InstructionRepository;
@@ -51,8 +52,8 @@ public class RecipeService {
 
     public Recipe getById(Long id) {
         return recipeRepository.findById(id)
-                //ToDo | Create special exception
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(()-> new RecipeNotFountException(
+                        "Recipe with id " + id + " not found"));
     }
 
     @Transactional
@@ -68,7 +69,11 @@ public class RecipeService {
 
         updateInstruction(recipeDTO);
 
-        return recipeRepository.save(recipe);
+        try {
+            return recipeRepository.save(recipe);
+        } catch (Exception e) {
+            throw new UpdatingRecipeException("Recipe updating error");
+        }
     }
 
     @Transactional
@@ -83,15 +88,19 @@ public class RecipeService {
 
         saveInstruction(recipe, recipeDTO);
 
-        return recipeRepository.save(recipe);
+        try {
+            return recipeRepository.save(recipe);
+        } catch (Exception e) {
+            throw new CreationRecipeException("Recipe creating error");
+        }
     }
 
     @Transactional
     public boolean delete(Recipe recipe) {
         try {
             Recipe recipeToDelete = recipeRepository.findById(recipe.getId())
-                    //ToDo | Create special exception
-                    .orElseThrow(RuntimeException::new);
+                    .orElseThrow(()-> new RecipeNotFountException(
+                            "Recipe with id " + recipe.getId() + " not found"));
 
             // Delete all ingredient capacities
             recipeToDelete.setIngredientCapacities(null);
@@ -102,8 +111,8 @@ public class RecipeService {
 
             recipeRepository.delete(recipeToDelete);
         } catch (RuntimeException e) {
-            //ToDo | Handle exception
-            e.printStackTrace();
+            throw new RecipeDeletingException(
+                    "Recipe with id " + recipe.getId() + " error");
         }
 
         return true;
@@ -115,10 +124,11 @@ public class RecipeService {
     @Transactional
     public Recipe getParent(RecipeDTO recipeDTO) {
         return recipeDTO.getParentId() == null ?
-                null :
-                recipeRepository.findById(recipeDTO.getParentId())
-                        .orElseThrow(RuntimeException::new);
-    }
+            null :
+            recipeRepository.findById(recipeDTO.getParentId())
+                .orElseThrow(() -> new RecipeNotFountException(
+                    "Recipe with id " + recipeDTO.getParentId() + " not found"));
+}
 
     @Transactional
     public List<IngredientCapacity> getIngredientCapacities(RecipeDTO recipeDTO) {
@@ -137,12 +147,13 @@ public class RecipeService {
                 .capacity(ingredientDTO.getCapacity())
                 .measure(ingredientDTO.getMeasure())
                 .build();
-
         try {
             return ingredientCapacityRepository.findByIngredientAndMeasureAndCapacity(
                     ingredientCapacity.getIngredient(),
                     ingredientCapacity.getMeasure(),
                     ingredientCapacity.getCapacity())
+                    //Ingredient capacity already exists exception
+                    //But now this is easier.
                 .orElseThrow(RuntimeException::new);
         } catch (RuntimeException e) {
             return ingredientCapacityRepository.save(ingredientCapacity);
@@ -156,7 +167,8 @@ public class RecipeService {
     public Ingredient getIngredientByName(String name) {
         try {
             return ingredientRepository.findByName(name)
-                    //ToDo | Create special exception
+                    //Ingredient capacity already exists exception
+                    //But now this is easier.
                     .orElseThrow(RuntimeException::new);
         } catch (RuntimeException e) {
             return ingredientRepository.save(Ingredient.builder()
@@ -166,18 +178,18 @@ public class RecipeService {
     }
 
     public RecipeDTO getDtoById(Long recipeId) {
-        //ToDo | Exception
         Recipe recipe = recipeRepository.findById(recipeId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new RecipeNotFountException(
+                        "Recipe with id " + recipeId + " not found"));
 
         List<IngredientDTO> ingredientDTOs = recipe.getIngredientCapacities().stream()
-                .map(ingredientCapacity ->
-                        IngredientDTO.builder()
-                                .name(ingredientCapacity.getIngredient().getName())
-                                .capacity(ingredientCapacity.getCapacity())
-                                .measure(ingredientCapacity.getMeasure())
-                                .build())
-                .collect(Collectors.toList());
+            .map(ingredientCapacity ->
+                IngredientDTO.builder()
+                    .name(ingredientCapacity.getIngredient().getName())
+                    .capacity(ingredientCapacity.getCapacity())
+                    .measure(ingredientCapacity.getMeasure())
+                    .build())
+            .collect(Collectors.toList());
 
         RecipeDTO recipeDTO = RecipeDTO.builder()
                 .id(recipe.getId())
@@ -202,14 +214,10 @@ public class RecipeService {
     }
 
     private void updateInstruction(RecipeDTO recipeDTO) {
-        try {
-            instructionRepository.getById(recipeDTO.getId())
-                    //ToDo | Create special exception
-                    .orElseThrow(RuntimeException::new)
-                    .setText(recipeDTO.getInstruction());
-        } catch (RuntimeException e) {
-            //ToDo | Handle exception
-            e.printStackTrace();
-        }
+        Instruction instruction = instructionRepository.getById(recipeDTO.getId())
+                .orElseThrow(() -> new RecipeNotFountException(
+                        "Recipe with id " + recipeDTO.getId() + " not found"));
+
+        instruction.setText(recipeDTO.getInstruction());
     }
 }

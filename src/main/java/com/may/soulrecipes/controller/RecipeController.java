@@ -3,6 +3,8 @@ package com.may.soulrecipes.controller;
 import com.may.soulrecipes.dto.IngredientDTO;
 import com.may.soulrecipes.dto.RecipeDTO;
 import com.may.soulrecipes.entity.Recipe;
+import com.may.soulrecipes.exception.CreationRecipeException;
+import com.may.soulrecipes.exception.RecipeOperationException;
 import com.may.soulrecipes.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -68,12 +70,7 @@ public class RecipeController {
             return "recipe/createRecipe";
         }
 
-        try {
-            recipeService.create(recipeForm);
-        } catch (Exception e) {
-            // ToDo | Add fail creation info
-            e.printStackTrace();
-        }
+        recipeService.create(recipeForm);
 
         return "redirect:/all";
     }
@@ -82,7 +79,7 @@ public class RecipeController {
     public String getRecipeDetailsPage(Model model,
                                        @PathVariable Long recipeId) {
         Recipe recipe = recipeService.getById(recipeId);
-        //ToDo | Refactor
+        //ToDo | Refactor | Maybe
         List<String> instruction = Arrays.asList(recipe.getInstruction()
                 .getText().split(System.lineSeparator()));
 
@@ -96,6 +93,8 @@ public class RecipeController {
     public String getEditRecipePage(Model model,
                                     @PathVariable Long recipeId) {
         model.addAttribute("recipeForm", recipeService.getDtoById(recipeId));
+
+        //ToDo | Refactor
         model.addAttribute("allRecipes",
                 recipeService.getAll().stream()
                         .filter(r -> !Objects.equals(r.getId(), recipeId))
@@ -142,5 +141,13 @@ public class RecipeController {
         }
 
         return "redirect:/all";
+    }
+
+    @ExceptionHandler(RecipeOperationException.class)
+    public String handleCreationRecipeException(Model model,
+                                                CreationRecipeException e) {
+        model.addAttribute("errorMessage", e.getMessage());
+
+        return "/error/defaultError";
     }
 }
