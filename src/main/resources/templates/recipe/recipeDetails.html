@@ -17,7 +17,8 @@
                 <div class="col">
                     <h2 class="my-3" th:text="${recipe.title}"></h2>
 
-                    <a class="btn" th:href="@{/{id}/edit(id=${recipe.id})}">Edit</a>
+                    <a class="btn btn-primary" th:href="@{/{id}/edit(id=${recipe.id})}">Edit</a>
+                    <a class="btn btn-primary" th:href="@{/{id}/delete(id=${recipe.id})}">Delete</a>
 
                     <h3 class="mt-2">Ingredients</h3>
                     <table>

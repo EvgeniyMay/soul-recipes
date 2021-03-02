@@ -86,25 +86,28 @@ public class RecipeService {
         return recipeRepository.save(recipe);
     }
 
-    private void saveInstruction(Recipe recipe, RecipeDTO recipeDTO) {
-        instructionRepository.save(Instruction.builder()
-            .text(recipeDTO.getInstruction())
-            .recipe(recipe)
-            .build());
-    }
-
-    private void updateInstruction(RecipeDTO recipeDTO) {
+    @Transactional
+    public boolean delete(Recipe recipe) {
         try {
-            instructionRepository.getById(recipeDTO.getId())
+            Recipe recipeToDelete = recipeRepository.findById(recipe.getId())
                     //ToDo | Create special exception
-                    .orElseThrow(RuntimeException::new)
-                    .setText(recipeDTO.getInstruction());
+                    .orElseThrow(RuntimeException::new);
+
+            // Delete all ingredient capacities
+            recipeToDelete.setIngredientCapacities(null);
+
+            // Delete parent for all children
+            recipeToDelete.getChildren().forEach(
+                    childRecipe -> childRecipe.setParent(null));
+
+            recipeRepository.delete(recipeToDelete);
         } catch (RuntimeException e) {
-            //ToDo
+            //ToDo | Handle exception
             e.printStackTrace();
         }
-    }
 
+        return true;
+    }
     /**
      * Get parent
      * or return cur element if it has not parent
@@ -190,4 +193,23 @@ public class RecipeService {
         return recipeDTO;
     }
 
+
+    private void saveInstruction(Recipe recipe, RecipeDTO recipeDTO) {
+        instructionRepository.save(Instruction.builder()
+                .text(recipeDTO.getInstruction())
+                .recipe(recipe)
+                .build());
+    }
+
+    private void updateInstruction(RecipeDTO recipeDTO) {
+        try {
+            instructionRepository.getById(recipeDTO.getId())
+                    //ToDo | Create special exception
+                    .orElseThrow(RuntimeException::new)
+                    .setText(recipeDTO.getInstruction());
+        } catch (RuntimeException e) {
+            //ToDo | Handle exception
+            e.printStackTrace();
+        }
+    }
 }

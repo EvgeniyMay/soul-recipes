@@ -107,7 +107,28 @@ public class RecipeController {
         try {
             recipeService.update(recipeForm);
         } catch (Exception e) {
-            // ToDo | Add fail creation info
+            // ToDo | Add fail editing info
+            e.printStackTrace();
+        }
+
+        return "redirect:/all";
+    }
+
+    @GetMapping("/{recipeId}/delete")
+    public String getDeleteRecipePage(Model model,
+                                      @PathVariable Long recipeId) {
+        model.addAttribute("recipe", recipeService.getById(recipeId));
+
+        return "recipe/deleteRecipe";
+    }
+
+    @PostMapping("/delete")
+    public String deleteRecipe(@ModelAttribute("recipe")
+                                           Recipe recipe) {
+        try {
+            recipeService.delete(recipe);
+        } catch (Exception e) {
+            // ToDo | Add fail deleting info
             e.printStackTrace();
         }
 
