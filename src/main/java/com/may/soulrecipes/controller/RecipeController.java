@@ -9,12 +9,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 
 @Controller
 public class RecipeController {
@@ -38,19 +41,14 @@ public class RecipeController {
 
     @GetMapping("/create")
     public String getCreateRecipePage(Model model,
-                                      @ModelAttribute("recipeForm")
-                                              RecipeDTO recipeForm,
                                       @RequestParam(value = "ingredientSize", required = false)
-                                              Integer ingredientSize) {
-        // ToDo | Add validation
-
+                                      Integer ingredientSize) {
         // ToDo | Refactor
         // User value or 1
         ingredientSize = ingredientSize == null ? 1 : ingredientSize;
-        // Create if not exists
-        recipeForm = recipeForm == null ? new RecipeDTO() : recipeForm;
 
-        // ToDo | Refactor
+        // Create recipe and fill ingredient blanks
+        RecipeDTO recipeForm = new RecipeDTO();
         for(int i=0; i<ingredientSize; ++i){
             recipeForm.getIngredients().add(new IngredientDTO());
         }
@@ -63,7 +61,13 @@ public class RecipeController {
 
     @PostMapping("/create")
     public String createRecipe(@ModelAttribute("recipeForm")
-                                           RecipeDTO recipeForm){
+                               @Valid
+                               RecipeDTO recipeForm,
+                               BindingResult bindingResult){
+        if(bindingResult.hasErrors()) {
+            return "recipe/createRecipe";
+        }
+
         try {
             recipeService.create(recipeForm);
         } catch (Exception e) {
@@ -102,8 +106,13 @@ public class RecipeController {
 
     @PostMapping("/edit")
     public String editRecipe(@ModelAttribute("recipeForm")
-                                         RecipeDTO recipeForm) {
-        // ToDo | Add validation
+                             @Valid
+                             RecipeDTO recipeForm,
+                             BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            return "recipe/editRecipe";
+        }
+
         try {
             recipeService.update(recipeForm);
         } catch (Exception e) {

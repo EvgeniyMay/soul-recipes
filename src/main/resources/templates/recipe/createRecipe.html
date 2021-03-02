@@ -56,6 +56,10 @@
                         <div class="mb-3">
                             <label for="recipeName" class="form-label">Title</label>
                             <input type="text" th:field="*{title}" class="form-control" id="recipeName">
+
+                            <div th:if="${#fields.hasErrors('title')}">
+                                <div th:errors="*{title}" class="alert alert-danger my-1" role="alert"></div>
+                            </div>
                         </div>
 
 <!--                        Description-->
@@ -66,6 +70,10 @@
                                       style="height: 70px">
                             </textarea>
                             <label for="recipeDescription">Description</label>
+
+                            <div th:if="${#fields.hasErrors('description')}">
+                                <div th:errors="*{description}" class="alert alert-danger my-1" role="alert"></div>
+                            </div>
                         </div>
 
 <!--                        Ingredients-->
@@ -100,6 +108,10 @@
                                       style="height: 100px">
                             </textarea>
                             <label for="recipeInstruction">Instruction</label>
+
+                            <div th:if="${#fields.hasErrors('instruction')}">
+                                <div th:errors="*{instruction}" class="alert alert-danger my-1" role="alert"></div>
+                            </div>
                         </div>
 
 <!--                        Confirm-->
