@@ -14,8 +14,8 @@
     <main>
         <div class="container">
             <div class="row">
-                <div class="col">
-                    <h2 class="my-3">Are you sure you want to delete next recipe ?</h2>
+                <div class="col-7 mx-auto">
+                    <h2 class="text-center my-3">Are you sure you want to delete next recipe ?</h2>
 
                     <div>
                         <p th:text="${recipe.title}"></p>
@@ -26,12 +26,21 @@
                         <p th:each="childRecipe : ${recipe.children}" th:text="${childRecipe.title}"></p>
                     </div>
 
-
-                    <form th:action="@{/delete}" th:object="${recipe}" method="POST">
-                        <input type="hidden" th:field="*{id}">
-                        <button type="submit">Delete</button>
-                    </form>
-                    <a th:href="@{/all}">No</a>
+                    <div class="row">
+                        <div class="col-6">
+                            <form th:action="@{/delete}" th:object="${recipe}" method="POST">
+                                <input type="hidden" th:field="*{id}">
+                                <div class="d-grid gap-2 my-2">
+                                    <button type="submit" class="btn btn-primary">Delete</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-6">
+                            <div class="d-grid gap-2 my-2">
+                                <a class="btn btn-primary" th:href="@{/all}">No</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
