@@ -14,13 +14,23 @@
     <main>
         <div class="container">
             <div class="row">
-                <div class="col">
-                    <h2 class="my-3" th:text="${recipe.title}"></h2>
+                <div class="col-6 mx-auto">
+                    <h2 class="text-center my-3" th:text="${recipe.title}"></h2>
 
-                    <a class="btn btn-primary" th:href="@{/{id}/edit(id=${recipe.id})}">Edit</a>
-                    <a class="btn btn-primary" th:href="@{/{id}/delete(id=${recipe.id})}">Delete</a>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="d-grid gap-2 my-2">
+                                <a class="btn btn-primary" th:href="@{/{id}/edit(id=${recipe.id})}">Edit</a>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="d-grid gap-2 my-2">
+                                <a class="btn btn-primary" th:href="@{/{id}/delete(id=${recipe.id})}">Delete</a>
+                            </div>
+                        </div>
+                    </div>
 
-                    <h3 class="mt-2">Ingredients</h3>
+                    <h3 class="text-center mt-2">Ingredients</h3>
                     <table>
                         <thead>
                             <tr>
@@ -38,19 +48,20 @@
                         </tbody>
                     </table>
 
-                    <h3 class="mt-2">Instruction</h3>
+
+                    <h3 class="text-center mt-2">Instruction</h3>
                     <div>
                         <p th:each="paragraph : ${instruction}" th:text="${paragraph}"></p>
                     </div>
 <!--                    Parent-->
                     <div th:if="${recipe.parent != null}">
-                        <p>Parent recipe</p>
+                        <h3 class="text-center mt-2">Parent recipe</h3>
 <!--                                ToDo | Add link-->
                         <a th:href="@{/{id}/details(id=${recipe.parent.id})}" th:text="${recipe.parent.title}"></a>
                     </div>
 <!--                    Children-->
                     <div th:if="${!recipe.children.isEmpty()}">
-                        <p>Child recipes</p>
+                        <h3 class="text-center mt-2">Child recipes</h3>
                         <ul>
                             <li th:each="childRecipe : ${recipe.children}">
 <!--                                ToDo | Add link-->
