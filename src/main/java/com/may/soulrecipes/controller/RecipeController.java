@@ -34,7 +34,7 @@ public class RecipeController {
 
     @GetMapping("/all")
     public String getAllRecipesPage(Model model,
-                                    @PageableDefault(sort = {"title"}, size = 10)
+                                    @PageableDefault(sort = {"title"}, size = 9)
                                     Pageable pageable) {
         model.addAttribute("recipePage", recipeService.getPageable(pageable));
 

@@ -15,7 +15,7 @@ public class RecipeDTO {
 
     private Long id;
 
-    @Length(min = 2, max = 20)
+    @Length(min = 2, max = 50)
     private String title;
 
     private List<IngredientDTO> ingredients = new ArrayList<>();
@@ -23,7 +23,7 @@ public class RecipeDTO {
     @Length(min = 10)
     private String instruction;
 
-    @Length(min = 2, max = 30)
+    @Length(min = 2, max = 200)
     private String description;
 
     private Long parentId;

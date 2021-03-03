@@ -1,0 +1,33 @@
+:root {
+    --red-color: #ff3f35;
+    --orange-color: #ff8340;
+    --yellow-color: #ffb340;
+    --main-bg-color: #fff2df;
+}
+
+.bg-main {
+    background-color: var(--main-bg-color);
+}
+.bg-red {
+    background-color: var(--red-color);
+}
+.bg-orange {
+    background-color: var(--orange-color);
+}
+.bg-yellow {
+    background-color: var(--yellow-color);
+}
+
+.text-red {
+    color: var(--red-color);
+}
+.text-orange {
+    color: var(--orange-color);
+}
+.text-yellow{
+    color:  var(--yellow-color);
+}
+
+.rounded-bottom-30 {
+    border-radius: 0 0 30px 30px;
+}
